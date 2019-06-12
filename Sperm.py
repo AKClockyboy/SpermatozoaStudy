@@ -6,15 +6,15 @@ import numpy as np
 import scipy
 import math
 
-class Sperm(object):
+class Spermatozoon(object):
 
     def __init__(self, pos, vel, mass, len, rotor):
 
         self.position = pos
         self.velocity = vel
         self.mass = mass
-        self.length = len #For now, length will be diametre of sperm-like sphere
-        self.rotation_rate = rotor
+        self.length = len #For now, length will be radius of sperm-like sphere
+        self.rotation_rate = rotor #I guess this is how fast the tail is spinning
 
     def __str__(self):
 

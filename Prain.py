@@ -12,26 +12,56 @@ from Sperm import Spermatozoon
 from Fluid import Fluid
 
 
-def DragForce(radius, velocity, Eta):
-    return -(6*pi*Eta*velocity)
+def DragForce(sperm, fluid):
+    #Drag Force, duh.
+    return -1/(6*math.pi*fluid.viscocity*sperm.length)
+
+def SpinDragForce(sperm, fluid):
+    #Rotational Drag Force, duh.
+    return -1/(8*math.pi*fluid.viscocity*(sperm.lenth)**3)
+
+
 
 def main():
+
     # Read name of output file from command line
-    """
+
     if len(sys.argv)!=3:
         print("Wrong number of arguments.")
-        print("Usage: " + sys.argv[0] + "param.firstinput" )
+        print("Usage: " + sys.argv[0] + "param.firstinput" + "traj.xyz")
         quit()
     else:
         infile_name = sys.argv[1]
-        output_file = sys.arg[2]
-    """
-    sperm = []
+        output_file = sys.argv[2]
 
-    print(sperm)
+    infile = open(infile_name,"r")
+    infile = np.loadtxt(infile)
 
-    sperm = sperm.append(Spermatozoon(np.array([0,0,0]),np.array(random.randint(1,101),random.randint(1,101),random.randint(1,101)]), 1, np.array([0]),np.array([0])))
+    visc = float(infile[0])
+    leg = float(infile[1])
+    den = int(infile[2])
+    speed = int(infile[3])
 
-    print(sperm)
+    #Initialising Sperm and Fluid Objects
+
+    sperm = Spermatozoon(np.array([0,0,0]),np.array([random.randint(0,50),random.randint(0,50),random.randint(0,50)]), 1, leg, np.array([0]), 0)
+    fluid = Fluid(visc, speed, den)
+
+    # Set up simulation parameters
+    dt = 0.01
+    numstep = 2000
+    time = 0.0
+
+    #Initial Force Value
+    Force = DragForce(sperm, fluid)
+
+    #Initial Time List
+    time_list = [0.0]
+
+    #Hopefully I can visulise it with this
+    f = open(output_file,'w') #Whatever Programme I use to model this
+
+    
+
 
 main()

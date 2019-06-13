@@ -8,10 +8,9 @@ import math
 
 class Fluid(object):
 
-    def __init__(self, Kvisc, Dvisc, vel, den):
+    def __init__(self, visc, vel, den):
 
-        self.kinematic_viscocity = Kvisc
-        self.dynamic_viscocity = Dvisc
+        self.viscocity = visc
         self.velocity = vel
         self.density = den
 

@@ -1,7 +1,5 @@
 """
-
 Code to plot PDF of vector_sum
-
 """
 
 import sys
@@ -12,22 +10,26 @@ from numpy import linalg as LA
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 import scipy.stats
+from scipy.linalg import norm
+
 
 def PDF(n_bins, vector_magnitude_list):
-    shape,loc,scale=scipy.stats.lognorm.fit(vector_magnitude_list,floc=0)
-    clr="#EFEFEF"
-    counts,edges,patches=plt.hist(vector_magnitude_list,bins=n_bins,color=clr)
-    centers=0.5*(edges[:-1]+edges[1:])
-    cdf=scipy.stats.lognorm.cdf(edges,shape,loc=loc,scale=scale)
-    prob=np.diff(cdf)
+
+    shape, loc, scale = scipy.stats.lognorm.fit(vector_magnitude_list, floc=0)
+    clr = "#EFEFEF"
+    counts, edges, patches = plt.hist(vector_magnitude_list, bins = n_bins, color=clr)
+    centers = 0.5*(edges[:-1] + edges[1:])
+    cdf = scipy.stats.lognorm.cdf(edges, shape, loc=loc, scale=scale)
+    prob = np.diff(cdf)
+
     plt.xlabel("Magnitude of Vector")
     plt.ylabel("Probability")
     plt.plot(centers, len(vector_magnitude_list)*prob,'k-',linewidth=2)
 
-def RandSphere(N, vector_list, ax):
+def RandSphere(N, ax):
     #Setting up parametres
-    phi = np.random.uniform(0,np.pi*2)
-    theta = np.arccos(np.random.uniform(-1,1))
+    phi = np.random.uniform(0, np.pi*2, N)
+    theta = np.arccos(np.random.uniform(-1, 1, N))
 
     #Creating x, y and z coordinates of the vectors
     x = np.sin(theta) * np.cos(phi)
@@ -36,12 +38,12 @@ def RandSphere(N, vector_list, ax):
 
     #Actualises vector as an array then appends to list --- factor of 1/N ot factorise
     vector = [-x/N, -y/N, -z/N]
-    vector_list.append(vector)
+    magnitude = norm(np.array([x.sum(),y.sum(),z.sum()]))
 
     #Plot every vector individually
     ax.scatter(x, y, z, c='b', marker = '3')
 
-    return(vector_list)
+    return(magnitude, vector)
 
 def MagnitudeSum(vector_list, vector_magnitude_list, ax, origin):
     #Now adding N vectors together to obtain magnitude

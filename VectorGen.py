@@ -1,7 +1,5 @@
 """
-
 Generating Random 3D Unit Vectors
-
 """
 
 import sys
@@ -19,20 +17,18 @@ ax = plt.axes(projection='3d')
 plt.title("Randomly distributed flagella vectors on a sphere", fontdict=None, loc='center', pad=None)
 
 #Constants and Parametres
-iterations = 10000
+iterations = 1000
 vector_magnitude_list = []
 origin = [0,0,0]
-N = 16
+N = 7
 n_bins = 100
 
 for i in range(iterations):
-    vector_list = []
-    for i in range(N):
-        pdff.RandSphere(N, vector_list, ax)
 
-    pdff.MagnitudeSum(vector_list, vector_magnitude_list, ax, origin)
+    magnitude, vector = (pdff.RandSphere(N, ax))
+    vector_magnitude_list.append(magnitude)
+print("Magnitudes are: " + str(vector_magnitude_list))
 
 plt.show()
-
 pdff.PDF(n_bins, vector_magnitude_list)
 plt.show()

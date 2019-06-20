@@ -12,6 +12,13 @@ from mpl_toolkits import mplot3d
 import scipy.stats
 from scipy.linalg import norm
 
+def mean_plotter(vector_magnitude_list):
+    shape, loc, scale = scipy.stats.lognorm.fit(vector_magnitude_list, floc=0)
+    mean = scipy.stats.lognorm.mean(shape, loc = loc, scale = 100)
+    return(mean)
+
+def mean_plotter_2(mean_length_list, flagella_number_list):
+    scipy.stats.binned_statistic(mean_length_list, flagella_number_list,)
 
 def PDF(n_bins, vector_magnitude_list):
 
@@ -22,11 +29,16 @@ def PDF(n_bins, vector_magnitude_list):
     cdf = scipy.stats.lognorm.cdf(edges, shape, loc=loc, scale=scale)
     prob = np.diff(cdf)
 
+    mean = scipy.stats.lognorm.mean(shape, loc = loc, scale = scale)
+
     plt.xlabel("Magnitude of Vector")
     plt.ylabel("Probability")
     plt.plot(centers, len(vector_magnitude_list)*prob,'k-',linewidth=2)
+    plt.show()
 
-def RandSphere(N, ax):
+    return(mean)
+
+def RandSphere(N):
     #Setting up parametres
     phi = np.random.uniform(0, np.pi*2, N)
     theta = np.arccos(np.random.uniform(-1, 1, N))
@@ -37,11 +49,11 @@ def RandSphere(N, ax):
     z = np.cos(theta)
 
     #Actualises vector as an array then appends to list --- factor of 1/N ot factorise
-    vector = [-x/N, -y/N, -z/N]
+    vector = [x/N, y/N, z/N]
     magnitude = norm(np.array([x.sum(),y.sum(),z.sum()]))
 
     #Plot every vector individually
-    ax.scatter(x, y, z, c='b', marker = '3')
+    #ax.scatter(x, y, z, c='b', marker = '3')
 
     return(magnitude, vector)
 

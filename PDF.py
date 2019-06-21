@@ -1,5 +1,7 @@
 """
+
 Code to plot PDF of vector_sum
+
 """
 
 import sys
@@ -14,18 +16,24 @@ from scipy.linalg import norm
 
 def mean_plotter(vector_magnitude_list):
     shape, loc, scale = scipy.stats.lognorm.fit(vector_magnitude_list, floc=0)
-    mean = scipy.stats.lognorm.mean(shape, loc = loc, scale = 100)
+    mean = scipy.stats.lognorm.mean(shape, loc = loc, scale = 1)
     return(mean)
 
-def mean_plotter_2(mean_length_list, flagella_number_list):
-    scipy.stats.binned_statistic(mean_length_list, flagella_number_list,)
+def mean_plotter_2(vector_magnitude_list, n_bins):
+    counts, edges, patches = plt.hist(vector_magnitude_list, bins = n_bins, color = "#EFEFEF")
+    centres = 0.5*(edges[:-1] + edges[1:])
+    #print("wat are the centres " + str(centres))
+    #print("wat are the counts " + str(counts))
+    products = np.sum(np.multiply(counts, centres))
+    
+    return(products)
 
 def PDF(n_bins, vector_magnitude_list):
 
     shape, loc, scale = scipy.stats.lognorm.fit(vector_magnitude_list, floc=0)
     clr = "#EFEFEF"
     counts, edges, patches = plt.hist(vector_magnitude_list, bins = n_bins, color=clr)
-    centers = 0.5*(edges[:-1] + edges[1:])
+    centres = 0.5*(edges[:-1] + edges[1:])
     cdf = scipy.stats.lognorm.cdf(edges, shape, loc=loc, scale=scale)
     prob = np.diff(cdf)
 
@@ -50,7 +58,7 @@ def RandSphere(N):
 
     #Actualises vector as an array then appends to list --- factor of 1/N ot factorise
     vector = [x/N, y/N, z/N]
-    magnitude = norm(np.array([x.sum(),y.sum(),z.sum()]))
+    magnitude = norm(np.array([x.sum()/N, y.sum()/N, z.sum()/N]))
 
     #Plot every vector individually
     #ax.scatter(x, y, z, c='b', marker = '3')

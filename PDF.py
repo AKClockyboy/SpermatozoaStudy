@@ -20,12 +20,13 @@ def mean_plotter(vector_magnitude_list):
     return(mean)
 
 def mean_plotter_2(vector_magnitude_list, n_bins):
-    counts, edges, patches = plt.hist(vector_magnitude_list, bins = n_bins, color = "#EFEFEF")
-    centres = 0.5*(edges[:-1] + edges[1:])
-    #print("wat are the centres " + str(centres))
-    #print("wat are the counts " + str(counts))
-    products = np.sum(np.multiply(counts, centres))
-    
+
+    counts, edges, patches = plt.hist(vector_magnitude_list, bins = n_bins, color = "#EFEFEF") # takes histogram information
+
+    centres = 0.5*(edges[:-1] + edges[1:]) # calculates centres
+
+    products = np.sum(np.multiply(counts, centres)) # STILL NEEDS NORMALISED
+
     return(products)
 
 def PDF(n_bins, vector_magnitude_list):
@@ -37,14 +38,11 @@ def PDF(n_bins, vector_magnitude_list):
     cdf = scipy.stats.lognorm.cdf(edges, shape, loc=loc, scale=scale)
     prob = np.diff(cdf)
 
-    mean = scipy.stats.lognorm.mean(shape, loc = loc, scale = scale)
-
     plt.xlabel("Magnitude of Vector")
     plt.ylabel("Probability")
     plt.plot(centers, len(vector_magnitude_list)*prob,'k-',linewidth=2)
     plt.show()
 
-    return(mean)
 
 def RandSphere(N):
     #Setting up parametres
@@ -60,9 +58,6 @@ def RandSphere(N):
     vector = [x/N, y/N, z/N]
     magnitude = norm(np.array([x.sum()/N, y.sum()/N, z.sum()/N]))
 
-    #Plot every vector individually
-    #ax.scatter(x, y, z, c='b', marker = '3')
-
     return(magnitude, vector)
 
 def MagnitudeSum(vector_list, vector_magnitude_list, ax, origin):
@@ -75,3 +70,16 @@ def MagnitudeSum(vector_list, vector_magnitude_list, ax, origin):
     X, Y, Z = zip(origin)
     U, V, W = zip(vector_sum)
     ax.quiver(X,Y,Z,U,V,W,arrow_length_ratio = 0.1)
+
+def mean_length_plotter():
+    plt.xlabel("Number of Flagella on Sphere")
+    plt.ylabel("Mean Magnitude of Force Vector")
+    plt.plot(flagella_number_list, mean_length_list)
+    plt.show()
+
+def sphere_plotter(vector):
+    #Establishing the 3D plot
+    fig = plt.figure()
+    ax = plt.axes(projection='3d')
+    plt.title("Randomly distributed flagella vectors on a sphere", fontdict=None, loc='center', pad=None)
+    ax.scatter(x, y, z, c='b', marker = '3')

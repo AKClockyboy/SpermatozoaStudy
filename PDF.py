@@ -12,6 +12,8 @@ from numpy import linalg as LA
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 import scipy.stats
+import pandas as pd
+import csv
 from scipy.linalg import norm
 
 def mean_plotter(vector_magnitude_list):
@@ -19,7 +21,7 @@ def mean_plotter(vector_magnitude_list):
     mean = scipy.stats.lognorm.mean(shape, loc = loc, scale = 1)
     return(mean)
 
-def mean_plotter_2(vector_magnitude_list, n_bins):
+def mean_value_2(vector_magnitude_list, n_bins):
 
     counts, edges, patches = plt.hist(vector_magnitude_list, bins = n_bins, color = "#EFEFEF") # takes histogram information
 
@@ -42,7 +44,6 @@ def PDF(n_bins, vector_magnitude_list):
     plt.ylabel("Probability")
     plt.plot(centers, len(vector_magnitude_list)*prob,'k-',linewidth=2)
     plt.show()
-
 
 def RandSphere(N):
     #Setting up parametres
@@ -72,10 +73,23 @@ def MagnitudeSum(vector_list, vector_magnitude_list, ax, origin):
     ax.quiver(X,Y,Z,U,V,W,arrow_length_ratio = 0.1)
 
 def mean_length_plotter():
-    plt.xlabel("Number of Flagella on Sphere")
-    plt.ylabel("Mean Magnitude of Force Vector")
-    plt.plot(flagella_number_list, mean_length_list)
+
+
+    with open("Sphere_Sperm_Data.csv") as f:
+        readit = csv.reader(f)
+        for row in readit:
+            print( (" ".join(row).split(" ")))
+
+"""
+
+    plt.plot(x, label='Hopefully Loaded From A CSV')
+
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.legend()
     plt.show()
+
+"""
 
 def sphere_plotter(vector):
     #Establishing the 3D plot

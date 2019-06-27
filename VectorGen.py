@@ -1,58 +1,57 @@
 """
 
-Generating Random 3D Unit Vectors
+Modelling flagella forces on a randomly distributed unit sphere
 
 """
+
 
 import sys
 import math
 import numpy as np
 import random
-import PDF as pdff
+import Obs as Obs
 from numpy import linalg as LA
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 import timeit
 
 
-
 #Opening a file to write
-f = open('Sphere_Sperm_Data.csv',"w")
+f = open('Sphere_Sperm_Data.txt',"w")
 
 #Constants and Parametres
-iterations_of_postitions = 7 #How many sperm push the sphere
-iterations_of_numbers = 150 #How many times we want to increase number of sperm
+iterations_of_postitions = 4 #How many ways we arrange the sperm
+iterations_of_numbers = 300 #How many times we want to increase number of sperm
 mean_length_list = [] #Empty List to be filled later
 flagella_number_list = [] #Ditto
 origin = [0,0,0]
 N = 2
-n_bins = 50 #Bins for the histogram plot
+n_bins = 5 #Bins for the histogram plot
 
-time1 = timeit.default_timer()
+time1 = timeit.default_timer() #Timing The Loop
 
 for i in range(iterations_of_numbers):
     vector_magnitude_list = []
 
-    for i in range(iterations_of_postitions):
+    for i in range(iterations_of_postitions): #This loop generates the spheres
 
-        magnitude, vector = (pdff.RandSphere(N)) #remember to re-add 'ax'
-
+        magnitude, vector = (Obs.RandSphere(N))
         vector_magnitude_list.append(magnitude)
 
-    #f.write("%s \n" % vector_magnitude_list)
+        #print("\033[95m Completion : " + str(round(iterations_of_numbers*(3*iterations_of_postitions)/(iterations_of_numbers))) + '%\033[0m', end= '\r')
 
-    N += 1
+    N += 1 #How many the number of flagella increases by
 
     flagella_number_list.append(N)
-
-    mean_length_list.append(pdff.mean_value_2(vector_magnitude_list, n_bins))
+    mean_length_list.append((Obs.mean_value(vector_magnitude_list, n_bins))) #Now we append the empty lists from before
 
 #Finally, write to a file
 for a,b in zip(mean_length_list,flagella_number_list):
-    f.write("%s, %s \n" % (a,b))
+    f.write("%s,%s\n" % (a,b))
 f.close()
 
 time2 = timeit.default_timer()
-print("Time taken for code to run... in seconds :-  " + str(time2 - time1))
+print("Time taken for code to run... in seconds :-  " + str(time2 - time1)) #Finish Timing The Loop
 
-pdff.mean_length_plotter()
+Obs.mean_length_plotter() #Finally, send it to be plotted
+Obs.log_length_plotter()

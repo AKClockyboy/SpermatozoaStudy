@@ -21,7 +21,7 @@ f = open('Sphere_Sperm_Data.txt',"w")
 
 #Constants and Parametres
 iterations_of_postitions = 4 #How many ways we arrange the sperm
-iterations_of_numbers = 300 #How many times we want to increase number of sperm
+iterations_of_numbers = 1000 #How many times we want to increase number of sperm
 mean_length_list = [] #Empty List to be filled later
 flagella_number_list = [] #Ditto
 origin = [0,0,0]
@@ -40,7 +40,7 @@ for i in range(iterations_of_numbers):
 
         #print("\033[95m Completion : " + str(round(iterations_of_numbers*(3*iterations_of_postitions)/(iterations_of_numbers))) + '%\033[0m', end= '\r')
 
-    N += 1 #How many the number of flagella increases by
+    N += 5 #How many the number of flagella increases by
 
     flagella_number_list.append(N)
     mean_length_list.append((Obs.mean_value(vector_magnitude_list, n_bins))) #Now we append the empty lists from before

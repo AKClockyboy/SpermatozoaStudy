@@ -26,6 +26,7 @@ def mean_value(vector_magnitude_list, n_bins):
     return(products)
 
 def PDF(n_bins, vector_magnitude_list):
+    
     #Method to obtain a probability distribution function
     shape, loc, scale = scipy.stats.lognorm.fit(vector_magnitude_list, floc=0)
     clr = "#EFEFEF"
@@ -78,7 +79,7 @@ def mean_length_plotter():
     plt.title('Mean Magnitude of Force Vector\nVS\nNumber of Flagella')
     plt.xlabel('N')
     plt.ylabel('|L|')
-    #plt.plot(x, y, label = None)
+    #plt.scatter(x, y, label = None)
     lines = plt.plot(x, y, label = None)
     plt.setp(lines, 'color', 'm', linewidth = 2.0)
     plt.show()
@@ -99,12 +100,10 @@ def log_length_plotter():
     # Fit with polyfit
     b, m = polyfit(np.log(x), np.log(y), 1)
 
-
     plt.title('Log of Mean Magnitude of Force Vector\nVS\n log of Number of Flagella')
     plt.xlabel('Log(N)')
     plt.ylabel('Log(|L|)')
-    lines = plt.plot(np.log(x), np.log(y), label = None)
-    
-    plt.setp(lines, 'color', 'm', linewidth = 2.0)
-    plt.plot(np.log(x), b + m * np.log(x), '-')
+    plt.scatter(np.log(x), np.log(y), c = 'k', s = 900, marker = '$FUCK$', label = None, linewidths = 0.1)
+    #plt.setp(lines, 'color', 'm', linewidth = 2.0)
+    plt.plot(np.log(x), b + m * np.log(x), 'c')
     plt.show()

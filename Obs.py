@@ -1,8 +1,7 @@
 """
-
 Code to plot PDF of vector_sum
-
 """
+
 
 import sys
 import math
@@ -11,9 +10,11 @@ import random
 from numpy import linalg as LA
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
 import scipy.stats
 import csv
-from scipy.linalg import norm
+from scipy.linalg import norm #WHO KNOWS HOW MANY OF THESE I WILL NEED?
 
 def mean_value(vector_magnitude_list, n_bins):
 
@@ -26,7 +27,7 @@ def mean_value(vector_magnitude_list, n_bins):
     return(products)
 
 def PDF(n_bins, vector_magnitude_list):
-    
+
     #Method to obtain a probability distribution function
     shape, loc, scale = scipy.stats.lognorm.fit(vector_magnitude_list, floc=0)
     clr = "#EFEFEF"
@@ -74,13 +75,18 @@ def PDF_plotter(centres, vector_magnitude_list, prob):
 
 def mean_length_plotter():
 
+    from numpy.polynomial.polynomial import polyfit
+
     y,x = np.loadtxt('Sphere_Sperm_Data.txt', delimiter = ',', unpack=True)
 
+    C = np.sqrt(8/(3*math.pi))
     plt.title('Mean Magnitude of Force Vector\nVS\nNumber of Flagella')
     plt.xlabel('N')
     plt.ylabel('|L|')
-    #plt.scatter(x, y, label = None)
-    lines = plt.plot(x, y, label = None)
+    #b, m = polyfit(-C*np.sqrt(x), y, 0.01)
+    #plt.plot(C*(np.sqrt(x)), y,  label = None)
+    lines = plt.plot(-C*np.sqrt(x), y, label = None)
+    #plt.plot((x), b + m * (x), 'c')
     plt.setp(lines, 'color', 'm', linewidth = 2.0)
     plt.show()
 
@@ -91,19 +97,35 @@ def sphere_plotter(vector):
     plt.title("Randomly distributed flagella vectors on a sphere", fontdict=None, loc='center', pad=None)
     ax.scatter(x, y, z, c='b', marker = '3')
 
-def log_length_plotter():
+def log_length_plotter(N):
 
     from numpy.polynomial.polynomial import polyfit
 
     y,x = np.loadtxt('Sphere_Sperm_Data.txt', delimiter = ',', unpack=True)
 
+    y = np.log(y)
+    x = -np.log(np.sqrt(x))
+
+    results = sm.OLS(y,sm.add_constant(x)).fit()
+    print(results.summary())
+
+    plt.scatter(x,y, c = 'r', s = 1, marker = '.' )
+
+    X_plot = np.linspace(0, -np.log(N)*1.25,5.5)
+    plt.plot(X_plot, X_plot*results.params[1] + results.params[0], c = 'k')
+
+    plt.show()
+
+    """
+    OLD LINE FIT CODE
     # Fit with polyfit
     b, m = polyfit(np.log(x), np.log(y), 1)
 
     plt.title('Log of Mean Magnitude of Force Vector\nVS\n log of Number of Flagella')
     plt.xlabel('Log(N)')
     plt.ylabel('Log(|L|)')
-    plt.scatter(np.log(x), np.log(y), c = 'k', s = 900, marker = '$FUCK$', label = None, linewidths = 0.1)
+    plt.scatter(-np.log(x), np.log(y), c = 'k', s = 900, marker = '$FUCK$', label = None, linewidths = 0.1)
     #plt.setp(lines, 'color', 'm', linewidth = 2.0)
     plt.plot(np.log(x), b + m * np.log(x), 'c')
     plt.show()
+    """

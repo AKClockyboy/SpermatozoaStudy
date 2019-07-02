@@ -19,7 +19,8 @@ int main()
 }
 */
 
-/* SQUARE ROOT CALCULATION
+/*
+SQUARE ROOT CALCULATION
 int main()
 { double n,squarert;
   cout << "Enter an number and this should return the square root! : ";
@@ -105,5 +106,34 @@ void display(int var1,float var2)
   cout << "Da intaga' is dis' mon' : " << var1;
   cout << " and da floatin' ting is dis' mon : " << var2;
 
+}
+*/
+
+//Trying to understand default arguaments
+
+/*
+void display(char = '*', int = 1);
+int main()
+{
+  cout << "No arguament passed: \n ";
+  display();
+
+  cout << "\nFirst arguament passed: \n ";
+  display('#');
+
+  cout << "\nFirst and second arguaments passed : \n :";
+  display('$',5);
+
+  return 0;
+}
+
+
+void display(char c, int n)
+{
+  for(int i = 1; i <= n; ++i)
+  {
+    cout << c;
+  }
+  cout << endl;
 }
 */

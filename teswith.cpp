@@ -20,7 +20,7 @@ int main()
 */
 
 /*
-SQUARE ROOT CALCULATION
+//SQUARE ROOT CALCULATION
 int main()
 { double n,squarert;
   cout << "Enter an number and this should return the square root! : ";
@@ -64,7 +64,7 @@ int add(int a, int b) // Actually DEFINING the funciton now??
 */
 
 /*
-//Function Over loading
+//Function Overloading
 void display(int);
 void display(float);
 void display(int, float); //Declaring prototypes, this time 3 functions have the same name
@@ -109,7 +109,7 @@ void display(int var1,float var2)
 }
 */
 
-//Trying to understand default arguaments
+//Trying to understand default arguments
 
 /*
 void display(char = '*', int = 1);
@@ -135,5 +135,72 @@ void display(char c, int n)
     cout << c;
   }
   cout << endl;
+}
+*/
+
+//Another attempt at factorials using recursion
+
+/*
+int factorial(int);
+
+int main()
+{
+  int n;
+  cout << "Find the factorial of the number you type in 'ere' : ";
+  cin >> n;
+  cout << "Factorial of "<<n<<" is : " << factorial(n);
+  //return 0;
+}
+
+int factorial(int n)
+{
+  if (n > 1)
+  {
+    return n*factorial(n-1);
+  }
+  else
+  {
+    return 1;
+  }
+}
+*/
+
+//TIME TO WORK WITH ARRAYS
+
+/*
+int main()
+{
+  int oort[6], sum = 0;
+  cout << "Enter, like, six numbers : ";
+  for(int i=0; i<6; ++i)
+
+  {
+    cin >> oort[i];
+    sum +=  oort[i];
+  }
+
+  cout << "Sum = " << sum << endl;
+  return 0;
+}
+*/
+/*
+int main()
+{
+    int yaar[3][2] =
+    {
+        {2, 7},
+        {4, 8},
+        {1, 3}
+    };
+    //lets print the whole array ting yaar
+
+    for(int i = 0; i < 3; ++i)
+    {
+        for(int j = 0; j < 2; ++j)
+        {
+            cout << "yaar[" << i << "][" << j << "] = " << yaar[i][j] << endl;
+        }
+    }
+    return 0;
 }
 */

@@ -13,8 +13,30 @@ from mpl_toolkits import mplot3d
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 import scipy.stats
-import csv
 from scipy.linalg import norm #WHO KNOWS HOW MANY OF THESE I WILL NEED?
+
+def translation(vector, vector_list):
+
+    orig_vector_list = vector_list
+    for vector in vector_list:
+        for i in range(3):
+            vector[i-1] = vector[i-1] + vector[i-1]
+
+    return(vector_list)
+
+def rotation(new_transformed_v, N):
+
+    theta = np.arccos(np.random.uniform(0, 1, N))
+
+    for i in range(len(new_transformed_v)):
+
+        Rx = np.array([[1,0,0],[0,np.cos(theta),-np.sin(theta)],[0, np.sin(theta), np.cos(theta)]]) #x-rotation
+        Ry = np.array([[np.cos(theta),0,np.sin(theta)],[0,1,0],[-np.sin(theta), 0, np.cos(theta)]]) #y-rotation
+        Rz = np.array([[np.cos(theta), -np.sin(theta),0],[np.sin(theta), np.cos(theta),0],[0,0,1]]) #z-rotation
+        x = np.dot(np.dot(Rx,np.dot(Ry,Rz)),new_transformed_v[i-1])[0][0]
+        y = np.dot(np.dot(Rx,np.dot(Ry,Rz)),new_transformed_v[i-1])[1][0]
+        z = np.dot(np.dot(Rx,np.dot(Ry,Rz)),new_transformed_v[i-1])[2][0]
+        frank = np.array(x,y,z)
 
 def mean_value(vector_magnitude_list, n_bins):
 
@@ -50,21 +72,30 @@ def RandSphere(N):
     z = np.cos(theta)
 
     #Actualises vector as an array then appends to list --- factor of 1/N ot factorise MAYBE
-    vector = [x, y, z]
+    for i in range(N):
+        vector = [x[i-1], y[i-1], z[i-1]]
     magnitude = norm(np.array([x.sum(), y.sum(), z.sum()]))
 
     return(magnitude, vector)
 
-def MagnitudeSum(vector_list, vector_magnitude_list, ax, origin):
+def MagnitudeSum(vector, vector_list, transformed_v, origin):
     #Now adding N vectors together to obtain magnitude
     vector_sum = (list(map(sum, zip(*vector_list))))
-    vector_magnitude = (vector_sum[0]*vector_sum[0] + vector_sum[1]*vector_sum[1] + vector_sum[2]*vector_sum[2])**1/2
-    vector_magnitude_list.append(vector_magnitude)
+    #vector_magnitude = (vector_sum[0]*vector_sum[0] + vector_sum[1]*vector_sum[1] + vector_sum[2]*vector_sum[2])**1/2
+    #vector_magnitude_list.append(vector_magnitude)
 
     #Plotting for displaying the line of force
-    X, Y, Z = zip(origin)
-    U, V, W = zip(vector_sum)
-    ax.quiver(X,Y,Z,U,V,W,arrow_length_ratio = 0.1)
+    fig = plt.figure()
+    ax = fig.add_subplot(111,projection='3d')
+
+    for i in range(len(vector_list)):
+
+        X, Y, Z = zip(vector_list[i-1])
+        U, V, W = zip(transformed_v[i-1])
+
+        ax.quiver(X,Y,Z,U,V,W, arrow_length_ratio = 0.1)
+
+    plt.show()
 
 def PDF_plotter(centres, vector_magnitude_list, prob):
 
@@ -79,14 +110,12 @@ def mean_length_plotter():
 
     y,x = np.loadtxt('Sphere_Sperm_Data.txt', delimiter = ',', unpack=True)
 
-    C = np.sqrt(8/(3*math.pi))
     plt.title('Mean Magnitude of Force Vector\nVS\nNumber of Flagella')
     plt.xlabel('N')
     plt.ylabel('|L|')
-    #b, m = polyfit(-C*np.sqrt(x), y, 0.01)
-    #plt.plot(C*(np.sqrt(x)), y,  label = None)
+                        #Polyfit lies here ):
     lines = plt.plot(-C*np.sqrt(x), y, label = None)
-    #plt.plot((x), b + m * (x), 'c')
+
     plt.setp(lines, 'color', 'm', linewidth = 2.0)
     plt.show()
 
@@ -120,7 +149,6 @@ def log_length_plotter(N):
     OLD LINE FIT CODE
     # Fit with polyfit
     b, m = polyfit(np.log(x), np.log(y), 1)
-
     plt.title('Log of Mean Magnitude of Force Vector\nVS\n log of Number of Flagella')
     plt.xlabel('Log(N)')
     plt.ylabel('Log(|L|)')

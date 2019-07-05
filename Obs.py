@@ -24,19 +24,29 @@ def translation(vector, vector_list):
 
     return(vector_list)
 
-def rotation(new_transformed_v, N):
+def rotationX(transformed_v):
 
-    theta = np.arccos(np.random.uniform(0, 1, N))
+    theta = np.arccos(np.random.uniform(0, 1))
 
-    for i in range(len(new_transformed_v)):
+    Rx = np.array([[1,0,0],[0,np.cos(theta),-np.sin(theta)],[0, np.sin(theta), np.cos(theta)]])
 
-        Rx = np.array([[1,0,0],[0,np.cos(theta),-np.sin(theta)],[0, np.sin(theta), np.cos(theta)]]) #x-rotation
-        Ry = np.array([[np.cos(theta),0,np.sin(theta)],[0,1,0],[-np.sin(theta), 0, np.cos(theta)]]) #y-rotation
-        Rz = np.array([[np.cos(theta), -np.sin(theta),0],[np.sin(theta), np.cos(theta),0],[0,0,1]]) #z-rotation
-        x = np.dot(np.dot(Rx,np.dot(Ry,Rz)),new_transformed_v[i-1])[0][0]
-        y = np.dot(np.dot(Rx,np.dot(Ry,Rz)),new_transformed_v[i-1])[1][0]
-        z = np.dot(np.dot(Rx,np.dot(Ry,Rz)),new_transformed_v[i-1])[2][0]
-        frank = np.array(x,y,z)
+    return np.dot(Rx,transformed_v)
+
+def rotationY(transformed_v):
+
+    theta = np.arccos(np.random.uniform(0, 1))
+
+    Ry = np.array([[np.cos(theta),0,np.sin(theta)],[0,1,0],[-np.sin(theta), 0, np.cos(theta)]])
+
+    return np.dot(Ry,transformed_v)
+
+def rotationZ(transformed_v):
+
+    theta = np.arccos(np.random.uniform(-1, 1))
+
+    Rz = np.array([[np.cos(theta), -np.sin(theta),0],[np.sin(theta), np.cos(theta),0],[0,0,1]])
+
+    return np.dot(Rz,transformed_v)
 
 def mean_value(vector_magnitude_list, n_bins):
 
@@ -146,7 +156,7 @@ def log_length_plotter(N):
     plt.show()
 
     """
-    OLD LINE FIT CODE
+    OLD LINE FIT CODE RIP
     # Fit with polyfit
     b, m = polyfit(np.log(x), np.log(y), 1)
     plt.title('Log of Mean Magnitude of Force Vector\nVS\n log of Number of Flagella')

@@ -22,7 +22,7 @@ iterations_of_postitions = 4 #How many ways we arrange the sperm
 mean_length_list = [] #Empty List to be filled later
 flagella_number_list = [] #Ditto
 origin = [0,0,0]
-N = 1
+N = 250
 
 time1 = timeit.default_timer() #Timing The Loop
 vector_list = []
@@ -35,10 +35,16 @@ for i in range(N): #This loop generates a sphere
 time2 = timeit.default_timer()
 
 transformed_v = obs.translation(vector, vector_list)
-new_transformed_v = []
 
-R = obs.rotation(transformed_v, N)
-obs.MagnitudeSum(vector, vector_list, R, origin)
+obs.MagnitudeSum(vector, vector_list, transformed_v, origin)
+
+new_translation = []
+for i in range(len(transformed_v)):
+    new_translation.append(obs.rotationZ(obs.rotationY(obs.rotationX(transformed_v[i]))))
+
+
+
+obs.MagnitudeSum(vector, vector_list, new_translation, origin)
 
 
 print("Time taken for code to run... in seconds :-  " + str(time2 - time1)) #Finish Timing The Loop

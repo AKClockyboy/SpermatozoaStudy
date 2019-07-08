@@ -24,23 +24,84 @@ def translation(vector, vector_list):
 
     return(vector_list)
 
-def rotationX(transformed_v):
+def fullrotation(transformed_v):
 
-    theta = np.arccos(np.random.uniform(0, 1))
+    theta = np.arccos(np.random.uniform(-1, 1))
+    phi = np.arccos(np.random.uniform(0, 1))
+    psi = np.arccos(np.random.uniform(0, 1))
 
-    Rx = np.array([[1,0,0],[0,np.cos(theta),-np.sin(theta)],[0, np.sin(theta), np.cos(theta)]])
+    ct = np.cos(theta)
+    cph = np.cos(phi)
+    cps = np.cos(psi)
 
-    return np.dot(Rx,transformed_v)
+    st = np.sin(theta)
+    sph = np.sin(phi)
+    sps = np.sin(psi)
+
+    MegaRot = np.array([[ct*cph, -cps*sph + sps*st*cph, sps*sph+cps*st*cph],[ct*sph,cps*cph+sph*st*sps,-sps*cph+cps*st*sph],[-st,sph*ct,cps*ct]])
+
+    return(np.dot(MegaRot,transformed_v))
+
+def rotationZ(transformed_v):
+
+    theta =  np.arccos(np.random.uniform(-1, 1))
+
+    ID = np.array([[1,0,0],[0,1,0],[0,0,1]])
+
+    tensorV = np.array([[transformed_v[0]**2, transformed_v[0]*transformed_v[1], transformed_v[0]*transformed_v[2]],[transformed_v[0]*transformed_v[1], transformed_v[1]**2, transformed_v[2]*transformed_v[1]],[transformed_v[0]*transformed_v[2], transformed_v[2]*transformed_v[1], transformed_v[2]**2]])
+
+    crossV = np.array([[0,-transformed_v[2],transformed_v[1]],[transformed_v[2],0,-transformed_v[0]],[-transformed_v[1],transformed_v[0],0]])
+
+    Rz = np.cos(theta)*(ID) + np.sin(theta)*(crossV) + (1 - np.cos(theta))*(tensorV)
+
+    return(np.dot(Rz,transformed_v)/np.linalg.norm(np.dot(Rz,transformed_v)))
 
 def rotationY(transformed_v):
 
     theta = np.arccos(np.random.uniform(0, 1))
 
+    ID = np.array([[1,0,0],[0,1,0],[0,0,1]])
+
+
+    tensorV = np.array([[transformed_v[0]**2, transformed_v[0]*transformed_v[1], transformed_v[0]*transformed_v[2]],[transformed_v[0]*transformed_v[1], transformed_v[1]**2, transformed_v[2]*transformed_v[1]],[transformed_v[0]*transformed_v[2], transformed_v[2]*transformed_v[1], transformed_v[2]**2]])
+
+    crossV = np.array([[0,-transformed_v[0],transformed_v[2]],[transformed_v[0],0,-transformed_v[1]],[-transformed_v[2],transformed_v[1],0]])
+
+    Ry = np.cos(theta)*(ID) + np.sin(theta)*(crossV) + (1 - np.cos(theta))*(tensorV)
+
+    return(np.dot(Ry,transformed_v))
+
+def rotationX(transformed_v):
+
+    theta = np.arccos(np.random.uniform(0, 1))
+
+    ID = np.array([[1,0,0],[0,1,0],[0,0,1]])
+
+    tensorV = np.array([[transformed_v[0]**2, transformed_v[0]*transformed_v[1], transformed_v[0]*transformed_v[2]],[transformed_v[0]*transformed_v[1], transformed_v[1]**2, transformed_v[2]*transformed_v[1]],[transformed_v[0]*transformed_v[2], transformed_v[2]*transformed_v[1], transformed_v[2]**2]])
+
+    crossV = np.array([[0,-transformed_v[1],transformed_v[0]],[transformed_v[1],0,-transformed_v[2]],[-transformed_v[0],transformed_v[2],0]])
+
+    Rx = np.cos(theta)*(ID) + np.sin(theta)*(crossV) + (1 - np.cos(theta))*(tensorV)
+
+    return(np.dot(Rx,transformed_v)/np.linalg.norm(np.dot(Rx,transformed_v)))
+
+def brotationX(transformed_v):
+
+    theta = theta = np.arccos(np.random.uniform(0, 1))
+
+    Rx = np.array([[1,0,0],[0,np.cos(theta),-np.sin(theta)],[0, np.sin(theta), np.cos(theta)]])
+
+    return np.dot(Rx,transformed_v)
+
+def brotationY(transformed_v):
+
+    theta = theta = np.arccos(np.random.uniform(0, 1))
+
     Ry = np.array([[np.cos(theta),0,np.sin(theta)],[0,1,0],[-np.sin(theta), 0, np.cos(theta)]])
 
     return np.dot(Ry,transformed_v)
 
-def rotationZ(transformed_v):
+def brotationZ(transformed_v):
 
     theta = np.arccos(np.random.uniform(-1, 1))
 

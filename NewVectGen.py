@@ -18,33 +18,28 @@ import timeit
 f = open('Sphere_Sperm_Data.txt',"w")
 
 #Constants and Parametres
-iterations_of_postitions = 4 #How many ways we arrange the sperm
+iterations_of_postitions = 1 #How many ways we arrange the sperm
 mean_length_list = [] #Empty List to be filled later
 flagella_number_list = [] #Ditto
 origin = [0,0,0]
-N = 250
+N = 20
 
-time1 = timeit.default_timer() #Timing The Loop
 vector_list = []
 
 for i in range(N): #This loop generates a sphere
     magnitude, vector = obs.RandSphere(N)
     vector_list.append(vector)
 
-
-time2 = timeit.default_timer()
-
 transformed_v = obs.translation(vector, vector_list)
 
 obs.MagnitudeSum(vector, vector_list, transformed_v, origin)
 
+for i in range(N):
+    transformed_v[i] = transformed_v[i] / np.linalg.norm(transformed_v[i])
+
 new_translation = []
 for i in range(len(transformed_v)):
-    new_translation.append(obs.rotationZ(obs.rotationY(obs.rotationX(transformed_v[i]))))
-
+    new_translation.append(obs.fullrotation(transformed_v[i]))
 
 
 obs.MagnitudeSum(vector, vector_list, new_translation, origin)
-
-
-print("Time taken for code to run... in seconds :-  " + str(time2 - time1)) #Finish Timing The Loop

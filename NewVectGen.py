@@ -32,14 +32,15 @@ for i in range(N): #This loop generates a sphere
 
 transformed_v = obs.translation(vector, vector_list)
 
-obs.MagnitudeSum(vector, vector_list, transformed_v, origin)
-
 for i in range(N):
     transformed_v[i] = transformed_v[i] / np.linalg.norm(transformed_v[i])
 
+obs.MagnitudeSum(vector, vector_list, transformed_v, origin)
+
+print(transformed_v)
 new_translation = []
 for i in range(len(transformed_v)):
-    new_translation.append(obs.fullrotation(transformed_v[i]))
+    new_translation.append(obs.rotationZ(transformed_v[i]))
 
 
 obs.MagnitudeSum(vector, vector_list, new_translation, origin)

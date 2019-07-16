@@ -17,66 +17,59 @@ from scipy.linalg import norm #WHO KNOWS HOW MANY OF THESE I WILL NEED?
 
 def translation(vector, vector_list):
 
-    orig_vector_list = vector_list
     for vector in vector_list:
         for i in range(3):
             vector[i-1] = vector[i-1] + vector[i-1]
 
     return(vector_list)
 
-def fullrotation(transformed_v):
+def fullrotation(t_v):
 
-    theta = np.arccos(np.random.uniform(-1, 1))
-    phi = np.arccos(np.random.uniform(0, 1))
-    psi = np.arccos(np.random.uniform(0, 1))
+    alpha =  np.arccos(np.random.uniform(0, 1))
 
-    ct = np.cos(theta)
-    cph = np.cos(phi)
-    cps = np.cos(psi)
-
-    st = np.sin(theta)
-    sph = np.sin(phi)
-    sps = np.sin(psi)
-
-    MegaRot = np.array([[ct*cph, -cps*sph + sps*st*cph, sps*sph+cps*st*cph],[ct*sph,cps*cph+sph*st*sps,-sps*cph+cps*st*sph],[-st,sph*ct,cps*ct]])
-
-    return(np.dot(MegaRot,transformed_v))
-
-def brotationX(transformed_v):
-
-    theta = theta = np.arccos(np.random.uniform(0, 1))
-
-    Rx = np.array([[1,0,0],[0,np.cos(theta),-np.sin(theta)],[0, np.sin(theta), np.cos(theta)]])
-
-    return np.dot(Rx,transformed_v)
-
-def brotationY(transformed_v):
-
-    theta = theta = np.arccos(np.random.uniform(0, 1))
-
-    Ry = np.array([[np.cos(theta),0,np.sin(theta)],[0,1,0],[-np.sin(theta), 0, np.cos(theta)]])
-
-    return np.dot(Ry,transformed_v)
-
-def brotationZ(transformed_v):
-
-    theta = np.arccos(np.random.uniform(-1, 1))
-
-    Rz = np.array([[np.cos(theta), -np.sin(theta),0],[np.sin(theta), np.cos(theta),0],[0,0,1]])
-
-    return np.dot(Rz,transformed_v)
-
-def rotationZ(t_v):
-
-    phi  = np.arctan((t_v[0])/(t_v[2]))
-    theta = np.arctan((t_v[1])/np.sqrt(t_v[0]**2+t_v[2]**2))
-    Zalpha =  np.arccos(np.random.uniform(0, 1))
-    Yalpha = np.arccos(np.random.uniform(0, 1))
-    Xalpha = np.arccos(np.random.uniform(0, 1))
+    theta = np.arccos(np.random.uniform(0, 1))
 
     Ry = np.array([[np.cos(theta), 0, np.sin(theta)],[0 ,1 ,0],[-np.sin(theta), 0, np.cos(theta)]])
 
-    Rx = np.array([[1,0,0],[0,np.cos(phi), -np.sin(phi)],[0, np.sin(phi), np.cos(phi)]])
+    Rz =  np.array([[np.cos(alpha), -np.sin(alpha),0],[np.sin(alpha), np.cos(alpha),0],[0,0,1]])
+
+
+    return(Ry@Rz@t_v, theta)
+
+def forces(n_tr):
+    x = sum(n_tr)
+    return(norm(x))
+
+def rotation(t_v):
+
+    if t_v[0] > 0 and t_v[2] > 0:
+        phi  = -np.arctan((t_v[0])/(t_v[2]))
+    elif t_v[0] > 0 and t_v[2] < 0:
+        phi = np.arctan((t_v[0])/(t_v[2])) - np.pi/2
+    elif t_v[0] < 0 and t_v[2] < 0:
+        phi = np.arctan((t_v[0])/(t_v[2])) + np.pi/2
+    elif t_v[0] < 0 and t_v[2] > 0:
+        phi = -np.arctan((t_v[0])/(t_v[2]))
+    elif t_v[0] > 0 and t_v[2] == 0:
+        phi = -np.pi/2
+    elif t_v[0] == 0 and t_v[2] < 0:
+        phi = np.pi
+    elif t_v[0] < 0 and t_v[2] ==0:
+        phi = -np.pi/2
+    elif t_v[0] == 0 and t_v[2] == 0:
+        phi = 0
+
+    theta = np.arctan((t_v[1])/np.sqrt(t_v[0]**2+t_v[2]**2)) #rotating in y
+
+    alpha = np.pi/2 - (np.cos(phi)*np.cos(theta))
+
+    Zalpha =  np.arccos(np.random.uniform(-1, 1))
+    Yalpha = np.arccos(np.random.uniform(0, 1))
+    Xalpha = np.arccos(np.random.uniform(0, 1)) #Random params for rotation
+
+    Ry = np.array([[np.cos(theta), 0, np.sin(theta)],[0 ,1 ,0],[-np.sin(theta), 0, np.cos(theta)]]) #rotating y
+
+    Rx = np.array([[1,0,0],[0,np.cos(phi), -np.sin(phi)],[0, np.sin(phi), np.cos(phi)]]) #rotating x
 
     RandRz =  np.array([[np.cos(Zalpha), -np.sin(Zalpha),0],[np.sin(Zalpha), np.cos(Zalpha),0],[0,0,1]])
 
@@ -84,12 +77,11 @@ def rotationZ(t_v):
 
     RandRx = np.array([[1,0,0],[0,np.cos(Xalpha),-np.sin(Xalpha)],[0, np.sin(Xalpha), np.cos(Xalpha)]])
 
-    Rxi = np.array([[1, 0, 0],[0, np.cos(phi), np.sin(phi)],[0, -np.sin(phi), np.cos(phi)]])
+    Rxi = np.array([[1, 0, 0],[0, np.cos(phi), np.sin(phi)],[0, -np.sin(phi), np.cos(phi)]]) #inversing x rot.
 
-    Ryi = np.array([[np.cos(theta), 0, -np.sin(theta)],[0,1,0],[np.sin(theta), 0, np.cos(theta)]])
+    Ryi = np.array([[np.cos(theta), 0, -np.sin(theta)],[0,1,0],[np.sin(theta), 0, np.cos(theta)]]) #inversing y rot.
 
-
-    return Ryi@Rxi@RandRz@RandRy@RandRx@Rx@Ry@t_v
+    return (Ryi@Rxi@RandRz@RandRx@RandRy@Rx@Ry@t_v, alpha) #changed y and x order ??
 
 def mean_value(vector_magnitude_list, n_bins):
 
@@ -126,7 +118,7 @@ def RandSphere(N):
 
     #Actualises vector as an array then appends to list --- factor of 1/N ot factorise MAYBE
     for i in range(N):
-        vector = [x[i-1], y[i-1], z[i-1]]
+        vector = [x[i], y[i], z[i]]
     magnitude = norm(np.array([x.sum(), y.sum(), z.sum()]))
 
     return(magnitude, vector)
@@ -167,7 +159,7 @@ def mean_length_plotter():
     plt.xlabel('N')
     plt.ylabel('|L|')
                         #Polyfit lies here ):
-    lines = plt.plot(-C*np.sqrt(x), y, label = None)
+    lines = plt.plot(x, y, label = None)
 
     plt.setp(lines, 'color', 'm', linewidth = 2.0)
     plt.show()
@@ -195,7 +187,7 @@ def log_length_plotter(N):
 
     X_plot = np.linspace(0, -np.log(N)*1.25,5.5)
     plt.plot(X_plot, X_plot*results.params[1] + results.params[0], c = 'k')
-
+    plt.title('Mean Magnitude of Force Vector\nVS\nNumber of Flagella')
     plt.show()
 
     """

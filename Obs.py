@@ -37,6 +37,7 @@ def fullrotation(t_v):
     return(Ry@Rz@t_v, theta)
 
 def forces(n_tr):
+
     x = sum(n_tr)
     return(norm(x))
 

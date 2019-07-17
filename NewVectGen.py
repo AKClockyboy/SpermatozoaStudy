@@ -18,8 +18,8 @@ import scipy
 f = open('Sphere_Sperm_Data.txt',"w")
 
 #Constants and Parametres
-iterations_of_number_increase = 400 #How many ways we arrange the sperm
-iterations_of_postitions = 25
+iterations_of_number_increase = 300 #How many ways we arrange the sperm
+iterations_of_postitions = 1
 mean_length_list = [] #Empty List to be filled later
 flagella_number_list = [] #Ditto
 origin = [0,0,0]
@@ -33,7 +33,7 @@ for i in range(iterations_of_number_increase):
 
     initial_force_list = []
     final_force_list = []
-
+    final_force_list_2 = []
 
     for i in range(iterations_of_postitions):
 
@@ -52,10 +52,11 @@ for i in range(iterations_of_number_increase):
             mtx,alpha = obs.fullrotation(transformed_v[i])
             final_force_list.append(mtx)
             alpha_list.append(alpha)
-        x = sum(final_force_list)/len(final_force_list)
+        force = obs.forces(final_force_list)
+        final_force_list_2.append(force)
 
-    N += 3
-    mean_force_list.append(obs.forces(x))
+    N += 2
+    mean_force_list.append(obs.forces(final_force_list_2))
     number_list.append(N)
 
 #Writing to a file

@@ -25,7 +25,7 @@ def translation(vector, vector_list):
 
 def fullrotation(t_v):
 
-    alpha =  np.arccos(np.random.uniform(0, 1))
+    alpha =  np.random.uniform(0, 2*np.pi)
 
     theta = np.arccos(np.random.uniform(0, 1))
 
@@ -36,8 +36,17 @@ def fullrotation(t_v):
 
     return(Ry@Rz@t_v, theta)
 
-def forces(n_tr):
+def torque(final_force_list, initial_force_list, N):
+    torque_list = []
 
+    for i in range(N):
+
+        torque_list.append(np.cross(initial_force_list[i],final_force_list[i]))
+
+    torque = sum(torque_list)
+    return(torque)
+
+def forces(n_tr):
     x = sum(n_tr)
     return(norm(x))
 
@@ -154,7 +163,7 @@ def mean_length_plotter():
 
     from numpy.polynomial.polynomial import polyfit
 
-    y,x = np.loadtxt('Sphere_Sperm_Data.txt', delimiter = ',', unpack=True)
+    y,x = np.loadtxt('Sphere_Force_Data.txt', delimiter = ',', unpack=True)
 
     plt.title('Mean Magnitude of Force Vector\nVS\nNumber of Flagella')
     plt.xlabel('N')
@@ -165,7 +174,23 @@ def mean_length_plotter():
     plt.setp(lines, 'color', 'm', linewidth = 2.0)
     plt.show()
 
+def mean_torque_plotter():
+
+    from numpy.polynomial.polynomial import polyfit
+
+    y,x = np.loadtxt('Sphere_Torque_Data.txt', delimiter = ',', unpack=True)
+
+    plt.title('Mean Magnitude of Torque Vector\nVS\nNumber of Flagella')
+    plt.xlabel('N')
+    plt.ylabel('|L|')
+
+    lines = plt.plot(x, y, label = None)
+
+    plt.setp(lines, 'color', 'm', linewidth = 2.0)
+    plt.show()
+
 def sphere_plotter(vector):
+
     #Establishing the 3D plot of the flagella sphere
     fig = plt.figure()
     ax = plt.axes(projection='3d')
@@ -176,7 +201,7 @@ def log_length_plotter(N):
 
     from numpy.polynomial.polynomial import polyfit
 
-    y,x = np.loadtxt('Sphere_Sperm_Data.txt', delimiter = ',', unpack=True)
+    y,x = np.loadtxt('Sphere_Force_Data.txt', delimiter = ',', unpack=True)
 
     y = np.log(y)
     x = -np.log(np.sqrt(x))

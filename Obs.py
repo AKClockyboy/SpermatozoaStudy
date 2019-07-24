@@ -27,15 +27,13 @@ def fullrotation(t_v):
 
     theta =  np.arccos(np.random.uniform(-1, 1))
 
-    alpha = (np.random.uniform(0, np.pi)) #rotation angles
+    alpha = (np.random.uniform(0, 2*np.pi)) #rotation angles
 
     Ry = np.array([[np.cos(theta), 0, np.sin(theta)],[0 ,1 ,0],[-np.sin(theta), 0, np.cos(theta)]])
 
     Rz =  np.array([[np.cos(alpha), -np.sin(alpha),0],[np.sin(alpha), np.cos(alpha),0],[0,0,1]]) #rotation matrices
 
-    x = Rz@Ry
-
-    return(x@t_v, theta)
+    return(Ry@Rz@t_v, theta)
 
 def torque(final_force_list, initial_force_list, N, torque_list):
 
@@ -50,13 +48,13 @@ def torque(final_force_list, initial_force_list, N, torque_list):
 
     torque = sum(torque_list)
 
-    return((torque))
+    return(torque)
 
 def forces(n_tr):
 
     x = sum(n_tr)
 
-    return((x))
+    return(x)
 
 def rotation(t_v):
 

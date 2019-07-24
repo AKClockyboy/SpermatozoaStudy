@@ -1,7 +1,5 @@
 """
-
 Modelling flagella forces on a randomly distributed unit sphere
-
 """
 
 
@@ -18,10 +16,10 @@ import scipy
 
 def FandTGen():
     #Constants and Parametres
-    iterations_of_positions = 1000
+    iterations_of_positions = 10000
     mean_length_list = [] #Empty List to be filled later
     origin = [0,0,0]
-    N = 15
+    N = 10
 
 
     #Empty lists to fill later
@@ -59,13 +57,13 @@ def FandTGen():
 
 
         summed_force_list.append(obs.forces(final_force_list))
-        summed_torque_list.append(obs.torque(final_force_list, transformed_v, N, torque_list))
+        summed_torque_list.append(obs.torque(final_force_list, initial_force_list, N, torque_list))
 
         mean_mag_force_list.append(scipy.linalg.norm(obs.forces(final_force_list)))
-        mean_mag_torque_list.append(scipy.linalg.norm(obs.torque(final_force_list, transformed_v, N, torque_list)))
+        mean_mag_torque_list.append(scipy.linalg.norm(obs.torque(final_force_list, initial_force_list, N, torque_list)))
 
 
     mean_force = sum(mean_mag_force_list)/(iterations_of_positions)
     mean_torque = sum(mean_mag_torque_list)/(iterations_of_positions)
 
-    return(mean_force, mean_torque, summed_force_list, summed_torque_list)
+    return(mean_force, mean_torque, sum(summed_force_list)/iterations_of_positions, sum(summed_torque_list)/iterations_of_positions)

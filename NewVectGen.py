@@ -22,8 +22,8 @@ g = open('Sphere_Torque_Data.txt',"w")
 
 
 #Constants and Parametres
-iterations_of_number_increase = 50 #How many ways we arrange the sperm
-iterations_of_positions = 1000
+iterations_of_number_increase = 100 #How many ways we arrange the sperm
+iterations_of_positions = 100
 mean_length_list = [] #Empty List to be filled later
 origin = [0,0,0]
 N = 2
@@ -34,9 +34,13 @@ mean_force_list = []
 mean_torque_list = []
 
 for i in range(iterations_of_number_increase):
-    print(str(N*100/(2+2*iterations_of_number_increase)))
-    final_force_list_2 = []
-    final_torque_list = []
+
+    print(str(N/(2+iterations_of_number_increase)))
+
+    summed_force_list = []
+    summed_torque_list = []
+    mean_mag_force_list = []
+    mean_mag_torque_list = []
 
     for i in range(iterations_of_positions):
 
@@ -45,6 +49,7 @@ for i in range(iterations_of_number_increase):
         torque_list = []
 
         for i in range(N): #This loop generates a sphere
+
             magnitude, vector = obs.RandSphere(N)
             initial_force_list.append(vector)
 
@@ -63,27 +68,25 @@ for i in range(iterations_of_number_increase):
             final_force_list.append(mtx)
             alpha_list.append(alpha)
 
-        #print("FINAL FORCE LIST ::: " + str(final_force_list))
-        #print("INITIAL FORCE LIST ::: " + str(transformed_v))
+
+        summed_force_list.append(obs.forces(final_force_list))
+        summed_torque_list.append(obs.torque(final_force_list, initial_force_list, N, torque_list))
+
+        mean_mag_force_list.append(scipy.linalg.norm(obs.forces(final_force_list)))
+        mean_mag_torque_list.append(scipy.linalg.norm(obs.torque(final_force_list, initial_force_list, N, torque_list)))
+
+        initial_force_list = []
+        final_force_list = []
 
 
-        force = scipy.linalg.norm(obs.forces(final_force_list))
-        torque = obs.torque(final_force_list, transformed_v, N, torque_list)
+    mean_force = sum(mean_mag_force_list)/(iterations_of_positions)
+    mean_torque = sum(mean_mag_torque_list)/(iterations_of_positions)
 
-        final_force_list_2.append(force)
-
-        final_torque_list.append((torque))
-
-
-    x = sum(final_force_list_2)/(iterations_of_positions)
-    y = sum(final_torque_list)/(iterations_of_positions)
-
-
-    N += 2
-    mean_force_list.append(x)
-    mean_torque_list.append(y)
+    mean_force_list.append(mean_force)
+    mean_torque_list.append(mean_torque)
     number_list.append(N)
 
+    N += 1
 
 #Writing to a file
 for a,b in zip(mean_torque_list,number_list):

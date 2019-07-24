@@ -10,7 +10,11 @@ from numpy import linalg as LA
 import matplotlib.pyplot as pyplot
 from Sperm import Spermatozoon
 from Fluid import Fluid
+import SingleNewVectorGen as VectGen
+import Obs as obs
 
+def linforce():
+    return()
 
 def DragForce(sperm, fluid):
     #Drag Force, duh.
@@ -28,7 +32,7 @@ def main():
 
     if len(sys.argv)!=3:
         print("Wrong number of arguments.")
-        print("Usage: " + sys.argv[0] + "param.firstinput" + "traj.xyz")
+        print("Usage: " + sys.argv[0] + " param.firstinput " + "traj.xyz")
         quit()
     else:
         infile_name = sys.argv[1]
@@ -43,6 +47,8 @@ def main():
     speed = int(infile[3])
 
     #Initialising Sperm and Fluid Objects
+    mean_force, mean_torque, summed_force_list, summed_torque_list = VectGen.FandTGen()
+
 
     sperm = Spermatozoon(np.array([0.0001,0,0]),np.array([random.randint(0,500),random.randint(0,500),random.randint(0,500)]), 80, leg, np.array([0]), 1)
     fluid = Fluid(visc, speed, den)
@@ -52,7 +58,7 @@ def main():
 
     # Set up simulation parameters
     dt = 0.01
-    numstep = 2000
+    numstep = 200
     time = 0.0
 
     #Initial Force Value

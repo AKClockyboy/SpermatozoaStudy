@@ -19,36 +19,44 @@ def translation(vector, vector_list):
 
     for vector in vector_list:
         for i in range(3):
-            vector[i-1] = vector[i-1] + vector[i-1]
+            vector[i] = vector[i] + vector[i]
 
     return(vector_list)
 
 def fullrotation(t_v):
 
-    alpha =  np.random.uniform(0, 2*np.pi)
+    theta =  np.arccos(np.random.uniform(-1, 1))
 
-    theta = np.arccos(np.random.uniform(0, 1))
+    alpha = (np.random.uniform(0, np.pi)) #rotation angles
 
     Ry = np.array([[np.cos(theta), 0, np.sin(theta)],[0 ,1 ,0],[-np.sin(theta), 0, np.cos(theta)]])
 
-    Rz =  np.array([[np.cos(alpha), -np.sin(alpha),0],[np.sin(alpha), np.cos(alpha),0],[0,0,1]])
+    Rz =  np.array([[np.cos(alpha), -np.sin(alpha),0],[np.sin(alpha), np.cos(alpha),0],[0,0,1]]) #rotation matrices
 
+    x = Rz@Ry
 
-    return(Ry@Rz@t_v, theta)
+    return(x@t_v, theta)
 
-def torque(final_force_list, initial_force_list, N):
-    torque_list = []
+def torque(final_force_list, initial_force_list, N, torque_list):
+
 
     for i in range(N):
 
-        torque_list.append(np.cross(initial_force_list[i],final_force_list[i]))
+        X = final_force_list[i][1]*initial_force_list[i][2] - final_force_list[i][2]*initial_force_list[i][1]
+        Y = final_force_list[i][0]*initial_force_list[i][2] - final_force_list[i][2]*initial_force_list[i][0]
+        Z = final_force_list[i][0]*initial_force_list[i][1] - final_force_list[i][1]*initial_force_list[i][0]
+
+        torque_list.append(np.array([X,Y,Z]))
 
     torque = sum(torque_list)
-    return(torque)
+
+    return((torque))
 
 def forces(n_tr):
+
     x = sum(n_tr)
-    return(norm(x))
+
+    return((x))
 
 def rotation(t_v):
 
@@ -91,7 +99,7 @@ def rotation(t_v):
 
     Ryi = np.array([[np.cos(theta), 0, -np.sin(theta)],[0,1,0],[np.sin(theta), 0, np.cos(theta)]]) #inversing y rot.
 
-    return (Ryi@Rxi@RandRz@RandRx@RandRy@Rx@Ry@t_v, alpha) #changed y and x order ??
+    return (Ryi@Rxi@RandRz@RandRx@RandRy@Rx@Ry@t_v, alpha) #my old rotation function for memory's sake
 
 def mean_value(vector_magnitude_list, n_bins):
 
@@ -133,7 +141,7 @@ def RandSphere(N):
 
     return(magnitude, vector)
 
-def MagnitudeSum(vector, vector_list, transformed_v, origin):
+def MagnitudeSum(vector_list, transformed_v, origin):
     #Now adding N vectors together to obtain magnitude
     vector_sum = (list(map(sum, zip(*vector_list))))
     #vector_magnitude = (vector_sum[0]*vector_sum[0] + vector_sum[1]*vector_sum[1] + vector_sum[2]*vector_sum[2])**1/2
@@ -145,8 +153,8 @@ def MagnitudeSum(vector, vector_list, transformed_v, origin):
 
     for i in range(len(vector_list)):
 
-        X, Y, Z = zip(vector_list[i-1])
-        U, V, W = zip(transformed_v[i-1])
+        X, Y, Z = zip(vector_list[i])
+        U, V, W = zip(transformed_v[i])
 
         ax.quiver(X,Y,Z,U,V,W, arrow_length_ratio = 0.1)
 
@@ -161,8 +169,6 @@ def PDF_plotter(centres, vector_magnitude_list, prob):
 
 def mean_length_plotter():
 
-    from numpy.polynomial.polynomial import polyfit
-
     y,x = np.loadtxt('Sphere_Force_Data.txt', delimiter = ',', unpack=True)
 
     plt.title('Mean Magnitude of Force Vector\nVS\nNumber of Flagella')
@@ -175,8 +181,6 @@ def mean_length_plotter():
     plt.show()
 
 def mean_torque_plotter():
-
-    from numpy.polynomial.polynomial import polyfit
 
     y,x = np.loadtxt('Sphere_Torque_Data.txt', delimiter = ',', unpack=True)
 

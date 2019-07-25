@@ -19,7 +19,7 @@ def FandTGen():
     iterations_of_positions = 10000
     mean_length_list = [] #Empty List to be filled later
     origin = [0,0,0]
-    N = 10
+    N = 20
 
 
     #Empty lists to fill later

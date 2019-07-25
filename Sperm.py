@@ -8,13 +8,14 @@ import math
 
 class Spermatozoon(object):
 
-    def __init__(self, pos, vel, mass, leg, rotor, label):
+    def __init__(self, pos, vel, mass, leg, rotor, ang, label):
 
         self.position = pos
         self.velocity = vel
         self.mass = mass
-        self.length = leg #For now, length will be radius of sperm-like sphere
-        self.rotation_rate = rotor #I guess this is how fast the tail is spinning
+        self.length = leg
+        self.angular_velocity = rotor 
+        self.angle = ang
         self.label = label
 
     def __str__(self):
@@ -24,6 +25,7 @@ class Spermatozoon(object):
     def kinetic_energy(self):
 
         return 0.5*self.mass*(np.linalg.norm(self.velocity))**2
+
 
     # Time integration methods
 
@@ -39,4 +41,10 @@ class Spermatozoon(object):
 
         self.position = self.position + dt*(self.velocity) + 0.5*dt**2*force/self.mass
 
-    
+    def leap_angular_velocity(self, dt, torque):
+
+        self.angular_velocity = torque*dt
+
+    def leap_angle(self, dt):
+
+        self.angle = self.angular_velocity*dt

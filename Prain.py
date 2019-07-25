@@ -8,25 +8,38 @@ import numpy as np
 import random
 from numpy import linalg as LA
 import matplotlib.pyplot as pyplot
+import scipy
 from Sperm import Spermatozoon
 from Fluid import Fluid
 import SingleNewVectorGen as VectGen
 import Obs as obs
 
-def linforce():
+def angular_torque_tings(dt, torque, mass, length):
 
-    return()
+    angle = torque*dt*5/(2*mass*length*length)
 
-def torqueconsid()
+    return(angle)
 
-    return()
+def PHAT_rot_matrix(torque, x):
+
+    torque = torque/scipy.linalg.norm(torque)
+
+    U1 = torque[0]
+    U2 = torque[1]
+    U3 = torque[2]
+
+    PHAT = np.array([[np.cos(x)+(1-np.cos(x))*U1*U1, U1*U2*(1-np.cos(x))-U3*(np.sin(x)), U1*U3*(1-np.cos(x))+U2*np.sin(x)], [U2*U1*(1-np.cos(x))+U3*np.sin(x), np.cos(x) + U2*U2*(1-np.cos(x)), U2*U3*(1-np.cos(x)) - U1*np.sin(x)], [U3*U1*(1-np.cos(x))-U2*np.sin(x), U3*U2*(1-np.cos(x))+U1*np.sin(x), np.cos(x)+U3*U3*(1-np.cos(x))]])
+
+    print(PHAT)
+
+    return(PHAT)
 
 def DragForce(sperm, fluid):
     #Drag Force, duh.
 
     DragForce = -((6*math.pi*fluid.viscocity*sperm.length))*(sperm.velocity)
 
-    print(DragForce)
+    #print(DragForce)
 
     return -((6*math.pi*fluid.viscocity*sperm.length))*(sperm.velocity)
 
@@ -58,26 +71,30 @@ def main():
     #Initialising Sperm and Fluid Objects
 
     mean_force, mean_torque, summed_force_list, summed_torque_list = VectGen.FandTGen()
+    #print(summed_torque_list)
 
-
-
-    sperm = Spermatozoon(np.array([0.0001,1,0]),np.array([0,0,0]), 80, leg, np.array([0,0,0]), 1)
+    sperm = Spermatozoon(np.array([0.0001,1,0]), np.array([0,0,0]), 0.1, leg, np.array([0,0,0]), 0, 1)
 
     fluid = Fluid(visc, speed, den)
 
     sperm_position_list = []
 
     # Set up simulation parameters
-    dt = 0.1
-    numstep = 20000
+    dt = 0.005
+    numstep = 100000
     time = 0.0
 
     #Initial Force Value
     force = summed_force_list + DragForce(sperm, fluid)
 
+    #Torque set-up
+    alpha = angular_torque_tings(dt, mean_torque, sperm.mass, sperm.length)
+    rot = PHAT_rot_matrix(summed_torque_list, alpha)
+
     #Initial Time and Position List
     time_list = [0.0]
     pos_list = [sperm.position]
+
 
 
     #Hopefully I can visulise it with this
@@ -90,10 +107,10 @@ def main():
         sperm.leap_pos2nd(dt, force)
 
         #Re-calculating Force
-        force_new = summed_force_list + DragForce(sperm, fluid)
+        force_new = rot@(summed_force_list) + DragForce(sperm, fluid)
 
-        #Velocity Update
-        sperm.leap_velocity(dt, force + force_new)
+        #Velocity and Torque/Angle Update
+        sperm.leap_velocity(dt, rot@(force + force_new))
 
         # Increase time and reset force value
         time += dt

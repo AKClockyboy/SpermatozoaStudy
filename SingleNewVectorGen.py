@@ -14,12 +14,12 @@ from mpl_toolkits import mplot3d
 import timeit
 import scipy
 
-def FandTGen():
+def FandTGen(N):
     #Constants and Parametres
     iterations_of_positions = 10000
     mean_length_list = [] #Empty List to be filled later
     origin = [0,0,0]
-    N = 20
+    
 
 
     #Empty lists to fill later

@@ -30,7 +30,7 @@ def PHAT_rot_matrix(torque, x):
 
     PHAT = np.array([[np.cos(x)+(1-np.cos(x))*U1*U1, U1*U2*(1-np.cos(x))-U3*(np.sin(x)), U1*U3*(1-np.cos(x))+U2*np.sin(x)], [U2*U1*(1-np.cos(x))+U3*np.sin(x), np.cos(x) + U2*U2*(1-np.cos(x)), U2*U3*(1-np.cos(x)) - U1*np.sin(x)], [U3*U1*(1-np.cos(x))-U2*np.sin(x), U3*U2*(1-np.cos(x))+U1*np.sin(x), np.cos(x)+U3*U3*(1-np.cos(x))]])
 
-    print(PHAT)
+    #print(PHAT)
 
     return(PHAT)
 

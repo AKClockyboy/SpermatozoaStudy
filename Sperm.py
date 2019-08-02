@@ -14,7 +14,7 @@ class Spermatozoon(object):
         self.velocity = vel
         self.mass = mass
         self.length = leg
-        self.angular_velocity = rotor 
+        self.angular_velocity = rotor
         self.angle = ang
         self.label = label
 
@@ -39,7 +39,7 @@ class Spermatozoon(object):
 
     def leap_pos2nd(self, dt, force):
 
-        self.position = self.position + dt*(self.velocity) + 0.5*dt**2*force/self.mass
+        self.position = self.position + dt*(self.velocity) + (0.5*dt**2)*force/self.mass
 
     def leap_angular_velocity(self, dt, torque):
 

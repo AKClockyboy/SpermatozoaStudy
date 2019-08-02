@@ -11,13 +11,14 @@ import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 from mpl_toolkits.mplot3d import Axes3D
 
+"""
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
 vector = [0,0,1]
 vector_list = []
 
-for i in range(7000):
+for i in range(50):
 
     Zalpha =  np.random.uniform(0, 2*np.pi)
     Yalpha = np.arccos(np.random.uniform(0, 1))
@@ -38,4 +39,15 @@ for i in range(7000):
     z = vector[2]
 
     ax.scatter(x, y, z, c='r', marker = '.')
+plt.show()
+"""
+
+x,y = np.loadtxt('AverageTorque.txt', delimiter = ' ', unpack=True)
+plt.title('Mean Magnitude of Force Vector\nVS\nNumber of Flagella')
+plt.xlabel('N')
+plt.ylabel('|L|')
+
+lines = plt.plot(x, y, label = None)
+
+plt.setp(lines, 'color', 'm', linewidth = 2.0)
 plt.show()
